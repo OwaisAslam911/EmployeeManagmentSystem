@@ -41,7 +41,7 @@
     <link rel="stylesheet" href="/Content/css/kaiadmin.min.css" />
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
-    <link rel="stylesheet" href="assets/css/demo.css" />
+    <link rel="stylesheet" href="/Content/css/demo.css" />
   </head>
 <body>
    
@@ -102,6 +102,21 @@
 
                 </a>
             </li>
+             <li class="nav-item ">
+                <a runat="server" href="~/EmployeesList">
+                    <i class="fas fa-users"></i>
+                    <p>Employees List</p>
+
+                </a>
+            </li>
+             <li class="nav-item ">
+      <a runat="server" href="~/Login">
+          <i class="fas fa-users"></i>
+          <p>Login</p>
+
+      </a>
+  </li>
+
             </ul>
           </div>
         </div>
@@ -170,7 +185,6 @@
                 </li>
              
                
-               
                 <li class="nav-item topbar-user dropdown hidden-caret">
                   <a
                     class="dropdown-toggle profile-pic"
@@ -187,7 +201,7 @@
                     </div>
                     <span class="profile-username">
                       <span class="op-7">Hi,</span>
-                      <span class="fw-bold">Hizrian</span>
+                      <span class="fw-bold"><asp:Label ID="UserName" runat="server" CssClass="navbar-text"></asp:Label></span>
                     </span>
                   </a>
                   <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -463,6 +477,7 @@
       <!-- End Custom template -->
     </div>
     <!--   Core JS Files   -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="/Scripts/js/core/jquery-3.7.1.min.js"></script>
     <script src="/Scripts/js/core/popper.min.js"></script>
     <script src="/Scripts/js/core/bootstrap.min.js"></script>
@@ -474,13 +489,13 @@
     <script src="/Scripts/js/plugin/chart.js/chart.min.js"></script>
 
     <!-- jQuery Sparkline -->
-    <script src="assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+    <script src="/Scripts/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
 
     <!-- Chart Circle -->
     <script src="/Scripts/js/plugin/chart-circle/circles.min.js"></script>
 
     <!-- Datatables -->
-    <script src="assets/js/plugin/datatables/datatables.min.js"></script>
+    <script src="/Scripts/js/plugin/datatables/datatables.min.js"></script>
 
     <!-- Bootstrap Notify -->
     <script src="/Scripts/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>

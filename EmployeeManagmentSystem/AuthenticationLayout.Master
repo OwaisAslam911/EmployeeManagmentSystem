@@ -41,16 +41,17 @@
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="assets/css/demo.css" />
+
   </head>
 <body>
 
-    <form id="form1" runat="server">
+    
         <div>
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
 
             </asp:ContentPlaceHolder>
         </div>
-    </form>
+    
     <script src="/Scripts/js/core/jquery-3.7.1.min.js"></script>
     <script src="/Scripts/js/core/popper.min.js"></script>
     <script src="/Scripts/js/core/bootstrap.min.js"></script>
