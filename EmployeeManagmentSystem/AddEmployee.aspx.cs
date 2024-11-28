@@ -74,22 +74,29 @@ namespace EmployeeManagmentSystem
             // Insert employee data
             AddEmployees(employeeName, userName, email, joiningDate, gender,  isManager, salary);
         }
-
         private void AddEmployees(string employeeName, string userName, string email, DateTime joiningDate, string gender, bool isManager, decimal salary)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
 
+            string roleName = isManager ? "Manager" : "Employee";  // Decide the role based on the checkbox
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                // SQL query to insert into Users and Employees tables
                 string query = "INSERT INTO Users (UserName, UserPassword, CreatedBy, CreatedAt) VALUES (@UserName, @UserPassword, @CreatedBy, @CreatedAt); " +
-                               "INSERT INTO Employees (EmployeeName, EmployeeEmail, JoiningDate, Gender, status, Salary) VALUES (@EmployeeName, @Email, @JoiningDate, @Gender,  'Active', @Salary);";
+                               "INSERT INTO Employees (EmployeeName, EmployeeEmail, JoiningDate, Gender, status, Salary) VALUES (@EmployeeName, @Email, @JoiningDate, @Gender, 'Active', @Salary); " +
+                               "INSERT INTO UserRoles (UserId, RoleId) " +
+                               "SELECT u.UserId, r.RoleId " +
+                               "FROM Users u " +
+                               "JOIN Roles r ON r.RoleName = @RoleName " +
+                               "WHERE u.UserName = @UserName";  // Insert the appropriate role based on @RoleName
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     // Add parameters for Users table
                     command.Parameters.AddWithValue("@UserName", userName);
-                    command.Parameters.AddWithValue("@UserPassword", "defaultPassword"); // Set a default password or generate one
-                    command.Parameters.AddWithValue("@CreatedBy", ""); // Or retrieve from session
+                    command.Parameters.AddWithValue("@UserPassword", "defaultPassword"); // Default password
+                    command.Parameters.AddWithValue("@CreatedBy", ""); // Retrieve from session
                     command.Parameters.AddWithValue("@CreatedAt", DateTime.Now);
 
                     // Add parameters for Employees table
@@ -97,35 +104,10 @@ namespace EmployeeManagmentSystem
                     command.Parameters.AddWithValue("@Email", email);
                     command.Parameters.AddWithValue("@JoiningDate", joiningDate);
                     command.Parameters.AddWithValue("@Gender", gender);
-                    command.Parameters.AddWithValue("@Salary", salary); // Pass the parsed decimal salary
-                    
+                    command.Parameters.AddWithValue("@Salary", salary);
 
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                    connection.Close();
-                }
-            }
-
-            
-            if (isManager)
-            {
-                AssignManagerRole(userName); 
-            }
-        }
-
-        private void AssignManagerRole(string userName)
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string query = "INSERT INTO UserRoles (UserId, RoleId) " +
-                               "SELECT u.UserId, r.RoleId FROM Users u " +
-                               "JOIN Roles r ON r.RoleName = 'Manager' WHERE u.UserName = @UserName";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@UserName", userName);
+                    // Add parameter for RoleName (either 'Manager' or 'Employee')
+                    command.Parameters.AddWithValue("@RoleName", roleName);
 
                     connection.Open();
                     command.ExecuteNonQuery();
@@ -133,6 +115,92 @@ namespace EmployeeManagmentSystem
                 }
             }
         }
+
+
+        //private void AddEmployees(string employeeName, string userName, string email, DateTime joiningDate, string gender, bool isManager, decimal salary)
+        //{
+        //    string connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
+
+        //    using (SqlConnection connection = new SqlConnection(connectionString))
+        //    {
+        //        // SQL query to insert into Users and Employees tables
+        //        string query = "INSERT INTO Users (UserName, UserPassword, CreatedBy, CreatedAt) VALUES (@UserName, @UserPassword, @CreatedBy, @CreatedAt); " +
+        //                       "INSERT INTO Employees (EmployeeName, EmployeeEmail, JoiningDate, Gender, status, Salary) VALUES (@EmployeeName, @Email, @JoiningDate, @Gender, 'Active', @Salary);";
+
+        //        using (SqlCommand command = new SqlCommand(query, connection))
+        //        {
+        //            // Parameters for Users table
+        //            command.Parameters.AddWithValue("@UserName", userName);
+        //            command.Parameters.AddWithValue("@UserPassword", ""); // Default password
+        //            command.Parameters.AddWithValue("@CreatedBy", ""); // Retrieve from session
+        //            command.Parameters.AddWithValue("@CreatedAt", DateTime.Now);
+
+        //            // Parameters for Employees table
+        //            command.Parameters.AddWithValue("@EmployeeName", employeeName);
+        //            command.Parameters.AddWithValue("@Email", email);
+        //            command.Parameters.AddWithValue("@JoiningDate", joiningDate);
+        //            command.Parameters.AddWithValue("@Gender", gender);
+        //            command.Parameters.AddWithValue("@Salary", salary);
+
+        //            connection.Open();
+        //            command.ExecuteNonQuery();
+        //            connection.Close();
+        //        }
+        //    }
+
+        //    // If the employee is a manager, assign the Manager role
+        //    if (isManager)
+        //    {
+        //        AssignManagerRole(userName);
+        //    }
+        //    else
+        //    {
+        //        // If Manager checkbox is NOT checked, assign Employee role
+        //        AssignEmployeeRole(userName);
+        //    }
+        //}
+
+        //private void AssignManagerRole(string userName)
+        //{
+        //    string connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
+
+        //    using (SqlConnection connection = new SqlConnection(connectionString))
+        //    {
+        //        string query = "INSERT INTO UserRoles (UserId, RoleId) " +
+        //                       "SELECT u.UserId, r.RoleId FROM Users u " +
+        //                       "JOIN Roles r ON r.RoleName = 'Manager' WHERE u.UserName = @UserName";
+
+        //        using (SqlCommand command = new SqlCommand(query, connection))
+        //        {
+        //            command.Parameters.AddWithValue("@UserName", userName);
+
+        //            connection.Open();
+        //            command.ExecuteNonQuery();
+        //            connection.Close();
+        //        }
+        //    }
+        //}
+        //private void AssignEmployeeRole(string userName)
+        //{
+        //    string connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
+
+        //    using (SqlConnection connection = new SqlConnection(connectionString))
+        //    {
+        //        // SQL query to assign the Employee role to the user
+        //        string query = "INSERT INTO UserRoles (UserId, RoleId) " +
+        //                       "SELECT u.UserId, r.RoleId FROM Users u " +
+        //                       "JOIN Roles r ON r.RoleName = 'Employee' WHERE u.UserName = @UserName";
+
+        //        using (SqlCommand command = new SqlCommand(query, connection))
+        //        {
+        //            command.Parameters.AddWithValue("@UserName", userName);
+
+        //            connection.Open();
+        //            command.ExecuteNonQuery();
+        //            connection.Close();
+        //        }
+        //    }
+        //}
 
 
     }
