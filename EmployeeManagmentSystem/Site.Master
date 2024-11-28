@@ -113,10 +113,14 @@
       <a runat="server" href="~/Login">
           <i class="fas fa-users"></i>
           <p>Login</p>
-
-      </a>
-  </li>
-
+         </a>
+             </li>
+              <li class="nav-item ">
+                 <asp:ContentPlaceHolder ID="HeadContent" runat="server"></asp:ContentPlaceHolder>
+                 
+               <a href="#" id="logoutLink" runat="server" OnServerClick="logoutLink_Click"><i class="fas fa-users"></i>Logout</a>
+                 
+             </li>
             </ul>
           </div>
         </div>
@@ -192,13 +196,7 @@
                     href="#"
                     aria-expanded="false"
                   >
-                    <div class="avatar-sm">
-                      <img
-                        src="/Content/img/profile.jpg"
-                        alt="..."
-                        class="avatar-img rounded-circle"
-                      />
-                    </div>
+                
                     <span class="profile-username">
                       <span class="op-7">Hi,</span>
                       <span class="fw-bold"><asp:Label ID="UserName" runat="server" CssClass="navbar-text"></asp:Label></span>

@@ -4,95 +4,75 @@
     <main aria-labelledby="title">
   <div class="container">
                 <div class="page-inner">
-
-                    <div class="row">
-                       
-                            <div class="col-md-4">
-                              <label for="validationCustom01" class="form-label">EmployeeName</label>
-                              <input type="text" class="form-control" id="EmployeeName"  required>
-                              <div class="valid-feedback">
-                                Looks good!
-                              </div>
-                            </div>
-                     
-                            <div class="col-md-4">
-                              <label for="validationCustomUsername" class="form-label">Username</label>
-                              <div class="input-group has-validation">
-                                <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                <input type="text" class="form-control" id="UserName" aria-describedby="inputGroupPrepend" required>
-                                <div class="invalid-feedback">
-                                  Please choose a username.
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="validationCustom03" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="Email" required>
-                                <div class="invalid-feedback">
-                                  Please provide a valid Email.
-                                </div>
-                              </div>
-                              <div class="col-md-6">
-                                <label for="validationCustom03" class="form-label">Joining Date</label>
-                                <input type="date" class="form-control" id="JoiningDate" required>
-                                <div class="invalid-feedback">
-                                  Please provide Joining Date.
-                                </div>
-                              </div>
-                            <div class="form-group">
-                                <label>Gender</label><br />
-                                <div class="d-flex">
-                                  <div class="form-check">
-                                    <input class="form-check-input" id="Gemder" type="radio" name="flexRadioDefault"  />
-                                    <label
-                                      class="form-check-label"
-                                      for="flexRadioDefault1"
-                                    >
-                                      Male
-                                    </label>
-                                  </div>
-                                  <div class="form-check">
-                                    <input class="form-check-input"  type="radio"
-                                      name="flexRadioDefault"
-                                      id="flexRadioDefault2"
-                                      
-                                    />
-                                    <label
-                                      class="form-check-label"
-                                      for="flexRadioDefault2"
-                                    >
-                                      Female
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                                <div class="col-md-6">
-                                <label for="validationCustom03" class="form-label">Assign Manager</label>
-                                    <select id="manager" class="form-control">
-                                        <option selected>Select Manager</option>
-                                    </select>
-
-                                 
-                                  
-                                     </div>
-                                     
-                            <div class="col-12">
-                              <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-                                <label class="form-check-label" for="invalidCheck">
-                                  Is a Manager
-                                </label>
-                               
-                              </div>
-                            </div>
-                            <div class="col-12">
-                              <button class="btn btn-primary" type="submit">Submit form</button>
-                            </div>
-                          
+ <div class="row">
+     <form runat="server">
+                    <div class="col-md-4">
+                        <label for="validationCustom01" class="form-label">Employee Name</label>
+                        <asp:TextBox ID="EmployeeName" runat="server" CssClass="form-control" required="true"></asp:TextBox>
                     </div>
+
+                    <div class="col-md-4">
+                        <label for="validationCustomUsername" class="form-label">Username</label>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text" id="inputGroupPrepend">@</span>
+                            <asp:TextBox ID="UserName" runat="server" CssClass="form-control" required="true"></asp:TextBox>
+                        </div>
+                    </div>
+                     <div class="col-md-6">
+                         <label for="validationCustom03" class="form-label">Password</label>
+                          <asp:TextBox ID="Password" runat="server" CssClass="form-control" required="true"></asp:TextBox>
+                     </div>
+
+                    <div class="col-md-6">
+                        <label for="validationCustom03" class="form-label">Email</label>
+                        <asp:TextBox ID="Email" runat="server" CssClass="form-control" required="true"></asp:TextBox>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="validationCustom03" class="form-label">Joining Date</label>
+                        <asp:TextBox ID="JoiningDate" runat="server" CssClass="form-control" required="true" TextMode="Date"></asp:TextBox>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gender</label><br />
+                        <div class="d-flex">
+                            <div class="form-check">
+                                <asp:RadioButton ID="GenderMale" runat="server" CssClass="form-check-input" GroupName="Gender" />
+                                <label class="form-check-label" for="GenderMale">Male</label>
+                            </div>
+                            <div class="form-check">
+                                <asp:RadioButton ID="GenderFemale" runat="server" CssClass="form-check-input" GroupName="Gender" />
+                                <label class="form-check-label" for="GenderFemale">Female</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="validationCustom03" class="form-label">Assign Manager</label>
+                        <asp:DropDownList ID="managerDropdownList" runat="server" CssClass="form-control" />
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-check">
+                            <asp:CheckBox ID="IsManager" runat="server" CssClass="form-check-input" />
+                            <label class="form-check-label" for="IsManager">Is a Manager</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                         <label for="validationCustom03" class="form-label">Salary</label>
+                          <asp:TextBox ID="Salary" runat="server" CssClass="form-control" required="true"></asp:TextBox>
+                     </div>
+
+
+
+                    <div class="col-12">
+                        <asp:Button ID="SubmitButton" runat="server" Text="Submit form" OnClick="SubmitButton_Click" CssClass="btn btn-primary" />
+                    </div>
+                    
+         </form>
                 </div>
             </div>
-
+        </div>
         
     </main>
 </asp:Content>

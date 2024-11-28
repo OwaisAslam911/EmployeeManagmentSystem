@@ -11,6 +11,17 @@ namespace EmployeeManagmentSystem
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["Username"] == null)
+            {
+                // If session is not set, redirect to login page
+                Response.Redirect("~/Login");
+            }
+            else
+            {
+                // Session is set, proceed with page logic
+                string username = Session["Username"].ToString();
+
+            }
 
         }
     }
