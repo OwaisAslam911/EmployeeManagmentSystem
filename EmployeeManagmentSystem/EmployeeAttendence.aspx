@@ -3,7 +3,7 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <main aria-labelledby="title">
-            <div class="row">
+           <%-- <div class="row">
               <div class="col-sm-6 col-md-3">
                 <div class="card card-stats card-round">
                   <div class="card-body">
@@ -136,6 +136,20 @@
                 </div>
               </div>
               
-            </div>
+            </div>--%>
+        <form runat="server">
+        <asp:GridView ID="AttendanceGridView" runat="server" AutoGenerateColumns="False" 
+    CellPadding="4" ForeColor="#333333" GridLines="None">
+    <Columns>
+        <asp:BoundField DataField="AttendanceId" HeaderText="Attendance ID" SortExpression="AttendanceId" />
+        <asp:BoundField DataField="EmployeeName" HeaderText="Employee Name" SortExpression="EmployeeName" />
+        <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" />
+        <asp:BoundField DataField="AttendanceType" HeaderText="Attendance Type" SortExpression="AttendanceType" />
+        <asp:BoundField DataField="Remarks" HeaderText="Remarks" SortExpression="Remarks" />
+        <asp:BoundField DataField="Status" HeaderText="Status" SortExpression="Status" />
+    </Columns>
+</asp:GridView>
+            </form>
+
     </main>
 </asp:Content>

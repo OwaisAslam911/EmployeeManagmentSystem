@@ -27,7 +27,7 @@ namespace EmployeeManagmentSystem
         private int ValidateUser(string username, string password)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
-            string query = "SELECT UserId FROM Users WHERE Username = @Username AND UserPassword = @Password";
+            string query = "SELECT UserId FROM Users WHERE Username = @Username AND Password = @Password";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -47,7 +47,7 @@ namespace EmployeeManagmentSystem
             List<string> roles = new List<string>();
             string connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
 
-            string query = "SELECT r.RoleName FROM Roles r " +
+            string query = "SELECT r.RoleName FROM Role r " +
                            "JOIN UserRoles ur ON r.RoleId = ur.RoleId " +
                            "WHERE ur.UserId = @UserId";
 
