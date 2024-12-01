@@ -75,7 +75,8 @@ namespace EmployeeManagmentSystem
             if (userId != 0)
             {
                 Session["Username"] = username;
-                 List<string> roles = GetUserRoles(userId);
+                int managerId = Convert.ToInt32(Session["EmployeeId"]);
+                List<string> roles = GetUserRoles(userId);
         Session["Roles"] = roles;
                 Response.Redirect("~/Default.aspx");
             }
