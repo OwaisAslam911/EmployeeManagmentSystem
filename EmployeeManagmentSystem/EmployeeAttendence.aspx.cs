@@ -12,14 +12,13 @@ namespace EmployeeManagmentSystem
         {
             if (!IsPostBack)
             {
-                // Check if the user is logged in
+              
                 if (Session["Username"] == null || Session["EmployeeId"] == null)
                 {
-                    Response.Redirect("~/Login"); // Redirect to login if not logged in
+                    Response.Redirect("~/Login"); 
                 }
                 else
                 {
-                    // Bind the attendance data based on the user's role (manager/admin)
                     BindAttendanceData();
                 }
             }
@@ -27,18 +26,16 @@ namespace EmployeeManagmentSystem
 
         private void BindAttendanceData()
         {
-            string username = Session["Username"].ToString(); // Get the logged-in username
-            int managerEmployeeId = Convert.ToInt32(Session["EmployeeId"]); // Get the logged-in manager's EmployeeId
+            string username = Session["Username"].ToString(); 
+            int managerEmployeeId = Convert.ToInt32(Session["EmployeeId"]); 
             string connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
 
-            // Get the user's role (Admin, Manager, or Employee)
             string userRole = GetUserRoleByUsername(username);
 
             string query;
 
             if (userRole == "Admin")
             {
-                // Admin: Fetch all attendance data
                 query = "SELECT a.AttendanceId, e.EmployeeName, a.Date, a.AttendanceType, a.Remarks, a.Status " +
                         "FROM Attendance a " +
                         "JOIN Employees e ON a.EmployeeId = e.EmployeeId " +
@@ -46,7 +43,7 @@ namespace EmployeeManagmentSystem
             }
             else if (userRole == "Manager")
             {
-                // Manager: Fetch attendance of employees managed by this manager
+                
                 query = "SELECT a.AttendanceId, e.EmployeeName, a.Date, a.AttendanceType, a.Remarks, a.Status " +
                         "FROM Attendance a " +
                         "JOIN Employees e ON a.EmployeeId = e.EmployeeId " +
@@ -55,7 +52,6 @@ namespace EmployeeManagmentSystem
             }
             else
             {
-                // Employee: Fetch only their own attendance
                 query = "SELECT a.AttendanceId, e.EmployeeName, a.Date, a.AttendanceType, a.Remarks, a.Status " +
                         "FROM Attendance a " +
                         "JOIN Employees e ON a.EmployeeId = e.EmployeeId " +
@@ -67,12 +63,11 @@ namespace EmployeeManagmentSystem
             {
                 SqlDataAdapter dataAdapter = new SqlDataAdapter(query, connection);
 
-                // Add parameters to the query based on the user's role
                 if (userRole == "Manager")
                 {
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@ManagerId", managerEmployeeId);
                 }
-                else if (userRole != "Admin") // Employee-specific query
+                else if (userRole != "Admin") 
                 {
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@EmployeeId", managerEmployeeId);
                 }
@@ -80,7 +75,6 @@ namespace EmployeeManagmentSystem
                 DataTable dataTable = new DataTable();
                 dataAdapter.Fill(dataTable);
 
-                // Bind the fetched data to the GridView
                 AttendanceGridView.DataSource = dataTable;
                 AttendanceGridView.DataBind();
             }

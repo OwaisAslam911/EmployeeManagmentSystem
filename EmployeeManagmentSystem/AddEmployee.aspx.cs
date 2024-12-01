@@ -28,7 +28,7 @@ namespace EmployeeManagmentSystem
                     Response.Redirect("~/Default.aspx");
                 }
             }
-            BindManagersDropdown();  // Bind managers on every load
+            BindManagersDropdown(); 
         }
 
         private void BindManagersDropdown()
@@ -46,45 +46,43 @@ namespace EmployeeManagmentSystem
                 connection.Open();
 
                 SqlDataReader reader = command.ExecuteReader();
-                managerDropdownList.DataSource = reader;  // Bind the data to the dropdown list
-                managerDropdownList.DataTextField = "UserName"; // Display the manager's name
-                managerDropdownList.DataValueField = "UserId"; // Use UserId as the value
+                managerDropdownList.DataSource = reader;  
+                managerDropdownList.DataTextField = "UserName"; 
+                managerDropdownList.DataValueField = "UserId"; 
                 managerDropdownList.DataBind();
 
                 connection.Close();
             }
 
-            // Optionally, add a default item like "Select Manager"
+            
             managerDropdownList.Items.Insert(0, new ListItem("Select Manager", "0"));
         }
 
         protected void SubmitButton_Click(object sender, EventArgs e)
         {
-            string employeeName = EmployeeName.Text.Trim(); // Get employee name
-            string userName = UserName.Text.Trim(); // Get username
-            string email = Email.Text.Trim(); // Get email
+            string employeeName = EmployeeName.Text.Trim(); 
+            string userName = UserName.Text.Trim(); 
+            string email = Email.Text.Trim(); 
             DateTime joiningDate = Convert.ToDateTime(JoiningDate.Text);
             string phone = Phone.Text.Trim();
             string gender = GenderMale.Checked ? "Male" : "Female";
             string password = Password.Text.Trim();
-            bool isManager = IsManager.Checked; // Check if employee is also a manager
+            bool isManager = IsManager.Checked;
             decimal salary = decimal.Parse(Salary.Text);
 
-            // Get selected manager ID from the dropdown
-            int managerId = 0;  // Default to 0 if no manager is selected
+            int managerId = 0;  
             if (managerDropdownList.SelectedValue != "0" && !string.IsNullOrEmpty(managerDropdownList.SelectedValue))
             {
-                managerId = int.Parse(managerDropdownList.SelectedValue); // Get ManagerId from dropdown
+                managerId = int.Parse(managerDropdownList.SelectedValue); 
             }
 
-            // Insert employee data
             AddEmployees(employeeName, userName, email, phone, joiningDate, gender, isManager, salary, password, managerId);
         }
 
        private void AddEmployees(string employeeName, string userName, string phone, string email, DateTime joiningDate, string gender, bool isManager, decimal salary, string password, int managerId)
 {
     string connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
-    string roleName = isManager ? "Manager" : "Employee"; // Decide the role based on the checkbox
+    string roleName = isManager ? "Manager" : "Employee"; 
 
     using (SqlConnection connection = new SqlConnection(connectionString))
     {
@@ -111,18 +109,17 @@ namespace EmployeeManagmentSystem
             WHERE u.UserName = @UserName;
             ";
 
-            // Add parameters for Employees table
             command.Parameters.AddWithValue("@EmployeeName", employeeName);
             command.Parameters.AddWithValue("@Email", email);
-            command.Parameters.AddWithValue("@Phone", phone);  // Ensure phone number length is correct
+            command.Parameters.AddWithValue("@Phone", phone);  
             command.Parameters.AddWithValue("@JoiningDate", joiningDate);
             command.Parameters.AddWithValue("@Gender", gender);
             command.Parameters.AddWithValue("@ManagerId", managerId == 0 ? (object)DBNull.Value : managerId);
             command.Parameters.AddWithValue("@Salary", salary);
 
-            // Add parameters for Users table
+          
             command.Parameters.AddWithValue("@UserName", userName);
-            command.Parameters.AddWithValue("@Password", password); // Use the entered password
+            command.Parameters.AddWithValue("@Password", password);
             command.Parameters.AddWithValue("@RoleName", roleName);
 
             connection.Open();

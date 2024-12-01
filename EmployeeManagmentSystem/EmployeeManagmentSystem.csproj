@@ -110,7 +110,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="About.aspx" />
+    <Content Include="MarkAttendence.aspx" />
     <Content Include="AddEmployee.aspx" />
     <Content Include="AttendenceSheet.aspx" />
     <Content Include="Contact.aspx" />
@@ -600,12 +600,12 @@
       <DependentUpon>AddEmployee.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="About.aspx.cs">
-      <DependentUpon>About.aspx</DependentUpon>
+    <Compile Include="MarkAttendence.aspx.cs">
+      <DependentUpon>MarkAttendence.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="About.aspx.designer.cs">
-      <DependentUpon>About.aspx</DependentUpon>
+    <Compile Include="MarkAttendence.aspx.designer.cs">
+      <DependentUpon>MarkAttendence.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="AttendenceSheet.aspx.cs">
