@@ -54,10 +54,8 @@ namespace EmployeeManagmentSystem
                 managerDropdownList.DataTextField = "UserName";
                 managerDropdownList.DataValueField = "EmployeeId";
                 managerDropdownList.DataBind();
-
                 connection.Close();
             }
-
 
             managerDropdownList.Items.Insert(0, new ListItem("Select Manager", "0"));
         }

@@ -101,6 +101,13 @@
                     <p>Add Employees</p>
 
                 </a>
+            </li>  
+              <li class="nav-item ">
+                <a runat="server" href="~/Profile">
+                    <i class="fas fa-users"></i>
+                    <p>Profile</p>
+
+                </a>
             </li>
                 <li class="nav-item ">
                 <a runat="server" href="~/MarkAttendence">
