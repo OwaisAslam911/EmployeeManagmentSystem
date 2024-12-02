@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Ajax.Utilities;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -12,17 +14,21 @@ namespace EmployeeManagmentSystem
         {
             if (!IsPostBack)
             {
-              
-                if (Session["Username"] == null || Session["EmployeeId"] == null)
+                if (Session["Roles"] == null)
                 {
-                    Response.Redirect("~/Login"); 
+                    Response.Redirect("~/Login.aspx");
                 }
-                else
+
+                List<string> roles = (List<string>)Session["Roles"];
+
+                if (!roles.Contains("Admin") && !roles.Contains("Manager "))
                 {
-                    BindAttendanceData();
+                    Response.Redirect("~/Default.aspx");
                 }
             }
+            BindAttendanceData();
         }
+
 
         private void BindAttendanceData()
         {
@@ -33,26 +39,27 @@ namespace EmployeeManagmentSystem
             string userRole = GetUserRoleByUsername(username);
 
             string query;
-
+            
             if (userRole == "Admin")
             {
-                query = "SELECT a.AttendanceId, e.EmployeeName, a.Date, a.AttendanceType, a.Remarks, a.Status " +
+                query = "SELECT a.AttendanceId, e.EmployeeName, a.Date, a.AttendanceType, a.Status " +
                         "FROM Attendance a " +
                         "JOIN Employees e ON a.EmployeeId = e.EmployeeId " +
                         "ORDER BY a.Date DESC";
             }
-            else if (userRole == "Manager")
+            else if (userRole == "Manager ")
             {
                 
-                query = "SELECT a.AttendanceId, e.EmployeeName, a.Date, a.AttendanceType, a.Remarks, a.Status " +
-                        "FROM Attendance a " +
-                        "JOIN Employees e ON a.EmployeeId = e.EmployeeId " +
-                        "WHERE e.ManagerId = @ManagerId " +
-                        "ORDER BY a.Date DESC";
+                query = @"	SELECT a.AttendanceId, e.EmployeeName, a.Date, a.AttendanceType,  a.Status 
+                        FROM Attendance a
+                        JOIN Employees e ON a.EmployeeId = e.EmployeeId
+                        WHERE e.ManagerId = @ManagerId
+                        ORDER BY a.Date DESC";
+
             }
             else
             {
-                query = "SELECT a.AttendanceId, e.EmployeeName, a.Date, a.AttendanceType, a.Remarks, a.Status " +
+                query = "SELECT a.AttendanceId, e.EmployeeName, a.Date, a.AttendanceType a.Status " +
                         "FROM Attendance a " +
                         "JOIN Employees e ON a.EmployeeId = e.EmployeeId " +
                         "WHERE e.EmployeeId = @EmployeeId " +
@@ -63,7 +70,7 @@ namespace EmployeeManagmentSystem
             {
                 SqlDataAdapter dataAdapter = new SqlDataAdapter(query, connection);
 
-                if (userRole == "Manager")
+                if (userRole == "Manager ")
                 {
                     dataAdapter.SelectCommand.Parameters.AddWithValue("@ManagerId", managerEmployeeId);
                 }

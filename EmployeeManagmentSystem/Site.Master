@@ -102,6 +102,13 @@
 
                 </a>
             </li>
+                <li class="nav-item ">
+                <a runat="server" href="~/MarkAttendence">
+                    <i class="fas fa-users"></i>
+                    <p>Mark Attendence</p>
+
+                </a>
+            </li>
              <li class="nav-item ">
                 <a runat="server" href="~/EmployeesList">
                     <i class="fas fa-users"></i>
@@ -214,7 +221,7 @@
                             />
                           </div>
                           <div class="u-text">
-                            <h4>Hizrian</h4>
+                            <h4><asp:Label ID="Label1" runat="server" CssClass="navbar-text"></asp:Label></h4>
                             <p class="text-muted">hello@example.com</p>
                             <a
                               href="profile.html"
@@ -232,7 +239,7 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Account Setting</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Logout</a>
+                         <a href="#" id="A1" runat="server" OnServerClick="logoutLink_Click"></a>
                       </li>
                     </div>
                   </ul>

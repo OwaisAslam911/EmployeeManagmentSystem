@@ -33,7 +33,7 @@ namespace EmployeeManagmentSystem
 
             int employeeId = GetEmployeeIdByUsername(username);
 
-            string query = "SELECT a.AttendanceId, e.EmployeeName, a.Date, a.AttendanceType, a.Remarks, a.Status " +
+            string query = "SELECT a.AttendanceId, e.EmployeeName, a.Date, a.AttendanceType,  a.Status " +
                            "FROM Attendance a " +
                            "JOIN Employees e ON a.EmployeeId = e.EmployeeId " +
                            "WHERE a.EmployeeId = @EmployeeId " +  

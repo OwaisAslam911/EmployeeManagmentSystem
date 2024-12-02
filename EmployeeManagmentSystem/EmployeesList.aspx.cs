@@ -1,81 +1,129 @@
-﻿using System;
+﻿using Microsoft.Ajax.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
+using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace EmployeeManagmentSystem
 {
-    public partial class EmployeesList : System.Web.UI.Page
+    public partial class EmployeeList : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["Username"] == null)
+            if (!IsPostBack)
             {
-                // If session is not set, redirect to login page
-                Response.Redirect("~/Login");
+                if (Session["Roles"] == null)
+                {
+                    Response.Redirect("~/Login.aspx");
+                }
+
+                List<string> roles = (List<string>)Session["Roles"];
+
+                if (!roles.Contains("Admin") && !roles.Contains("Manager "))
+                {
+                    Response.Redirect("~/AttendenceSheet.aspx");
+                }
+               
+            }
+            BindEmployeeData();
+        }
+
+
+        private void BindEmployeeData()
+        {
+            string username = Session["Username"].ToString();
+            int managerEmployeeId = Convert.ToInt32(Session["EmployeeId"]);
+            string connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
+
+            string userRole = GetUserRoleByUsernameforEmp(username);
+
+            string query;
+
+            if (userRole == "Admin")
+            {
+                query = @"  SELECT e.EmployeeId, e.EmployeeName, e.JoiningDate, e.Gender, 
+                   e.Salary, e.ManagerId, m.EmployeeName AS ManagerName, r.RoleName
+            FROM Employees e
+            LEFT JOIN Employees m ON e.ManagerId = m.EmployeeId
+            JOIN Users u ON e.EmployeeId = u.EmployeeId
+            JOIN UserRoles ur ON u.UserId = ur.UserId
+            JOIN Role r ON ur.RoleId = r.RoleId";
+            }
+            else if (userRole == "Manager ")
+            {
+
+                query = @"
+            SELECT e.EmployeeId, e.EmployeeName, e.JoiningDate, e.Gender, e.Salary, e.Status, 
+            e.ManagerId, m.EmployeeName AS ManagerName, r.RoleName
+            FROM Employees e
+            LEFT JOIN Employees m ON e.ManagerId = m.EmployeeId
+            JOIN Users u ON e.EmployeeId = u.EmployeeId
+            JOIN UserRoles ur ON u.UserId = ur.UserId
+            JOIN Role r ON ur.RoleId = r.RoleId
+            WHERE e.ManagerId = @ManagerId";
+
             }
             else
             {
-                // Session is set, proceed with page logic
-                string username = Session["Username"].ToString();
-               
+                query = @"SELECT e.EmployeeId, e.EmployeeName, e.Status , e.ManagerId
+                        FROM Employees e
+                        JOIN Role r ON r.RoleId = r.RoleId";
+              
             }
-        
-        string connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
-            string query = @"Select EmployeeName, EmployeeEmail, JoiningDate, Gender,Salary from Employees";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                try
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(query, connection);
+
+                if (userRole == "Manager ")
                 {
-                    connection.Open();
-                    SqlCommand command = new SqlCommand(query, connection);
-                    SqlDataReader sqlReader = command.ExecuteReader();
-                    GridView1.DataSource = sqlReader;
-                    GridView1.DataBind();
-                    sqlReader.Close();
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@ManagerId", managerEmployeeId);
                 }
-                catch (Exception ex)
+                else if (userRole != "Admin")
                 {
-                    Response.Write("Error: " + ex.Message);
+                    dataAdapter.SelectCommand.Parameters.AddWithValue("@EmployeeId", managerEmployeeId);
                 }
+
+                DataTable dataTable = new DataTable();
+                dataAdapter.Fill(dataTable);
+
+                GridView1.DataSource = dataTable;
+                GridView1.DataBind();
             }
         }
-        //protected void ReadGridViewData()
-        //{
-        //    foreach (GridViewRow row in GridView1.Rows)
-        //    {
-        //        // Ensure we are reading data from non-header rows
-        //        if (row.RowType == DataControlRowType.DataRow)
-        //        {
-        //            string EmployeeName = row.Cells[0].Text;
-        //            string EmployeeEmial = row.Cells[1].Text;
-        //            string JoiningDate = row.Cells[2].Text;
-        //            string Gender = row.Cells[3].Text;
 
-        //            string salary = row.Cells[5].Text;
+        private string GetUserRoleByUsernameforEmp(string username)
+        {
+            string userRole = string.Empty;
+            string connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
 
-        //            // You can now use these values as needed
-        //            Response.Write($"EmployeeName: {EmployeeName}, EmployeeEmail: {EmployeeEmial}, JoiningDate: {JoiningDate}, Gender: {Gender},  Salary: {salary} <br>");
-        //        }
-        //    }
-        //}
+            string query = "SELECT r.RoleName FROM Users u " +
+                           "JOIN UserRoles ur ON u.UserId = ur.UserId " +
+                           "JOIN Role r ON ur.RoleId = r.RoleId " +
+                           "WHERE u.Username = @UserName";
 
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@UserName", username);
+
+                connection.Open();
+                object result = command.ExecuteScalar();
+
+                if (result != null)
+                {
+                    userRole = result.ToString();
+                }
+            }
+
+            return userRole;
+        }
     }
-
-
 }
 
 
-public class Employees
-        {
-            public string EmployeeName { get; set; }
-            public string Email { get; set; }
-            public string JoiningDate { get; set; }
-            public string Gender { get; set; }
-            public string Salary { get; set; }
-        }
+
 

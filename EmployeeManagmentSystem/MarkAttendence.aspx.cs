@@ -65,17 +65,16 @@ namespace EmployeeManagmentSystem
                     }
                 }
 
-             
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    string query = "INSERT INTO Attendance (EmployeeId, [Date], AttendanceType, Remarks, Status) " +
-                                   "VALUES (@EmployeeId, @Date, @AttendanceType, @Remarks, @Status)";
+                    string query = "INSERT INTO Attendance (EmployeeId, [Date], AttendanceType, Status) " +
+                                   "VALUES (@EmployeeId, @Date, @AttendanceType, @Status)";
 
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@EmployeeId", employeeId);
                     command.Parameters.AddWithValue("@Date", DateTime.Now.Date);
                     command.Parameters.AddWithValue("@AttendanceType", attendanceType);
-                    command.Parameters.AddWithValue("@Remarks", DBNull.Value); 
+                   
                     command.Parameters.AddWithValue("@Status", "Active");
 
                     connection.Open();

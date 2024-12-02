@@ -4,13 +4,13 @@
     <main aria-labelledby="title">
         <form runat="server">
   <asp:GridView ID="AttendanceGridView" runat="server" AutoGenerateColumns="False" 
-    CellPadding="4" ForeColor="#333333" GridLines="None">
+    CellPadding="4" ForeColor="#333333" GridLines="None" CssClass="table table-striped">
     <Columns>
         <asp:BoundField DataField="AttendanceId" HeaderText="Attendance ID" SortExpression="AttendanceId" />
         <asp:BoundField DataField="EmployeeName" HeaderText="Employee Name" SortExpression="EmployeeName" />
         <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" />
         <asp:BoundField DataField="AttendanceType" HeaderText="Attendance Type" SortExpression="AttendanceType" />
-        <asp:BoundField DataField="Remarks" HeaderText="Remarks" SortExpression="Remarks" />
+        
         <asp:BoundField DataField="Status" HeaderText="Status" SortExpression="Status" />
     </Columns>
 </asp:GridView>

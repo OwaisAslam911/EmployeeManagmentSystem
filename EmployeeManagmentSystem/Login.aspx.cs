@@ -24,24 +24,42 @@ namespace EmployeeManagmentSystem
                 Response.Redirect("~/Default.aspx");
             }
         }
-        private int ValidateUser(string username, string password)
+        private (int userId, int employeeId) ValidateUser(string username, string password)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
-            string query = "SELECT UserId FROM Users WHERE Username = @Username AND Password = @Password";
+
+            // Updated query to join Users and Employees on EmployeeId
+            string query = "SELECT u.UserId, u.EmployeeId, e.EmployeeName " +
+                           "FROM Users u " +
+                           "JOIN Employees e ON u.EmployeeId = e.EmployeeId " +
+                           "WHERE u.Username = @Username AND u.Password = @Password";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@Username", username);
-                command.Parameters.AddWithValue("@Password", password); // Use plain-text password (not recommended for production)
+                command.Parameters.AddWithValue("@Password", password); // Use a secure password method in production
 
                 connection.Open();
-                int result = Convert.ToInt32(command.ExecuteScalar());
-                connection.Close();
 
-                return result != null ? Convert.ToInt32(result) : -1;   // If count is greater than 0, user is valid
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    int userId = Convert.ToInt32(reader["UserId"]);
+                    int employeeId = Convert.ToInt32(reader["EmployeeId"]);
+                    connection.Close();
+                    return (userId, employeeId);  // Return both UserId and EmployeeId
+                }
+                else
+                {
+                    connection.Close();
+                    return (0, 0);  // If no match is found
+                }
             }
         }
+
         private List<string> GetUserRoles(int userId)
         {
             List<string> roles = new List<string>();
@@ -69,25 +87,36 @@ namespace EmployeeManagmentSystem
         }
         protected void LoginButton_Click(object sender, EventArgs e)
         {
-            string username = usernameTextBox.Text.Trim();
-            string password = passwordTextBox.Text.Trim();
-            int userId = ValidateUser(username, password);
-            if (userId != 0)
+            try
             {
-                Session["Username"] = username;
-                int managerId = Convert.ToInt32(Session["EmployeeId"]);
-                List<string> roles = GetUserRoles(userId);
-        Session["Roles"] = roles;
-                Response.Redirect("~/Default.aspx");
+                string username = usernameTextBox.Text.Trim();
+                string password = passwordTextBox.Text.Trim();
+
+                var (userId, employeeId) = ValidateUser(username, password);
+
+                if (userId != 0 && employeeId != 0)
+                {
+                    Session["Username"] = username;
+                    Session["EmployeeId"] = employeeId;
+                    List<string> roles = GetUserRoles(userId);
+                    Session["Roles"] = roles;
+
+                    Response.Redirect("~/Default.aspx");
+                }
+                else
+                {
+                    errorMessage.Text = "Invalid username or password.";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Show an error message if the credentials are incorrect
-                errorMessage.Text = "Invalid username or password.";
+                // Log the exception or display it for debugging purposes
+                errorMessage.Text = "An error occurred: " + ex.Message;
             }
         }
 
-        
+
+
 
     }
 }

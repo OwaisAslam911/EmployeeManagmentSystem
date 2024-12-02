@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EmployeesList.aspx.cs" Inherits="EmployeeManagmentSystem.EmployeesList" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EmployeesList.aspx.cs" Inherits="EmployeeManagmentSystem.EmployeeList" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <main aria-labelledby="title">
@@ -10,18 +10,19 @@
         CellPadding="4" ForeColor="#333333" BorderWidth="1px" BorderStyle="Solid" BorderColor="black"
         GridLines="both" Width="882px" CssClass="grid-table">
         <Columns>
+            <asp:BoundField DataField="EmployeeId" HeaderText="Employee id" SortExpression="EmployeeId" />
             <asp:BoundField DataField="EmployeeName" HeaderText="Employee Name" SortExpression="EmployeeName" />
-            <asp:BoundField DataField="EmployeeEmail" HeaderText="Email" SortExpression="Email" />
             <asp:BoundField DataField="JoiningDate" HeaderText="Joining Date" SortExpression="JoiningDate" />
+            <asp:BoundField DataField="ManagerName" HeaderText="Manager Name" SortExpression="ManagerName" />
             <asp:BoundField DataField="Gender" HeaderText="Gender" SortExpression="Gender" />
             <asp:BoundField DataField="Salary" HeaderText="Salary" SortExpression="Salary" />
+             <asp:BoundField DataField="RoleName" HeaderText="Role" SortExpression="RoleName" />
         </Columns>
     </asp:GridView>
 
-    <asp:EntityDataSource ID="EntityDataSource2" runat="server" 
-                          ConnectionString="YourConnectionString" 
-                          DefaultContainerName="YourContextName" 
-                          EntitySetName="Employees" />
+   
+
+
 </form>
 
     <style>
